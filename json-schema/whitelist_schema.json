@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/whitelist/schema#",
+    "type": "object",
+    "required": ["version", "dataExtraction"],
+    "properties": {
+      "version": {
+        "type": "string",
+        "pattern": "^whitelist[0-9]+\\.[0-9]+$"
+      },
+      "dataExtraction": {
+        "type": "object",
+        "required": ["attributeGroups"],
+        "properties": {
+          "attributeGroups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["groupReference", "attributes"],
+              "properties": {
+                "groupReference": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["attributeRef"],
+                    "properties": {
+                      "attributeRef": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
