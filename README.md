@@ -1,6 +1,9 @@
-# DEQ
+# CRTDL 
 
-Schema and example JSON files describing the Data Extraction Query (**DEQ**) for the FDPG+ framework used to extract medical data based on specific criteria defined in a cohort. The query provides a what data to extract from a defined cohort. 
+**C**linical **R**esource **T**ransfer **D**efinition **L**anguage
+
+## Description
+This repo contains schema and example JSON files describing the Clinical Resource Transfer Definition Language (**CRTDL**) for the FDPG+ framework used to extract medical data based on specific criteria defined in a cohort. The query provides a what data to extract from a defined cohort. 
 
 ## Purpose
 
@@ -17,7 +20,7 @@ The data extraction object contains an array defining **attributeGroups**, which
 
 Each group has an identifier for the group called **groupReference**, a list of attributes to be extracted **attributes** and list of filters **filters**.
 
-An attributes to be extracted contains an attribute reference *attributeRef* and information if the attribute is required **must-have** e.g. ``` {
+An attributes to be extracted contains an attribute reference **attributeRef** and information if the attribute is required **must-have** e.g. ``` {
             "attributeRef": "medicationCode",
             "mustHave": true
           }```. 
@@ -136,6 +139,34 @@ Here is a example of a DEQ JSON:
               }
             }
           ]
+        ]
+      }
+    ]
+  }
+}
+
+```
+# Whitelisting
+
+Whitelisting happens at data integration center (DIC) level.  
+
+## Structure
+
+The Structure is equivalent to the **CRTDL** attributeGroups. Group references are FHIR compliant e.g. **profiles/ressources**. 
+
+## Example
+
+```
+{
+  "version": "whitelist1.0",
+  "dataExtraction": {
+    "attributeGroups": [
+      {
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung",
+        "attributes": [
+          {
+            "attributeRef": "Encounter.diagnosis"
+          }
         ]
       }
     ]
