@@ -32,7 +32,7 @@ Filters definition have a list of **FHIR search parameter operations** containin
 
 ## Example
 
-Here is a example of a DEQ JSON:
+Here is a example of a CRTDL JSON:
 
 ```json
 {
