@@ -18,7 +18,7 @@ The cohort definition in **CCDL**, see [**CCDL specs**](https://github.com/mediz
 
 The data extraction object contains an array defining **attributeGroups**, which bundle attributes together.
 
-Each group has an identifier for the group called **groupReference**, a list of attributes to be extracted **attributes** and list of filters **filters**.
+Each group has an identifier for the group called **groupReference**, a list of attributes to be extracted **attributes** and a filter object containing a time filter **** and a  list of code filters **filters**.
 
 An attributes to be extracted contains an attribute reference **attributeRef** and information if the attribute is required **must-have** e.g. ``` {
             "attributeRef": "medicationCode",
@@ -28,7 +28,7 @@ An attributes to be extracted contains an attribute reference **attributeRef** a
 
 If a **must have** condition is **violated**, it will result in a complete stop of the extraction for a **patient**. 
 
-Filters definition is equivalent to the filter definition in **CCDL**.
+Filters definition have a list of **FHIR search parameter operations** containing the type supported, name and corresponding parameters. Currrently **token** and **date** are supported.  
 
 ## Example
 
@@ -36,113 +36,127 @@ Here is a example of a DEQ JSON:
 
 ```json
 {
-  "version": "http://to_be_decided.com/draft-1/schema#",
-  "display": "Data Extraction for Cardiovascular Study",
-  "cohortDefinition": {
-    "version": "http://to_be_decided.com/draft-1/schema#",
-    "display": "Cardiovascular Disease Patients 18+",
-    "inclusionCriteria": [
-      [
-        {
-          "termCodes": [
+    "version": "http://json-schema.org/to-be-done/schema#",
+    "display": "",
+    "cohortDefinition": {
+      "version": "http://to_be_decided.com/draft-1/schema#",
+      "display": "",
+      "inclusionCriteria": [
+        [
             {
-              "code": "424144002",
-              "system": "http://snomed.info/sct",
-              "display": "Current chronological age"
+              "termCodes": [
+                {
+                  "code": "424144002",
+                  "system": "http://snomed.info/sct",
+                  "display": "Gegenwärtiges chronologisches Alter"
+                }
+              ],
+              "context": {
+                "code": "Patient",
+                "system": "fdpg.mii.cds",
+                "version": "1.0.0",
+                "display": "Patient"
+              },
+              "valueFilter": {
+                "type": "quantity-comparator",
+                "unit": {
+                  "code": "a",
+                  "display": "a"
+                },
+                "value": 18,
+                "comparator": "gt"
+              }
             }
           ],
-          "context": {
-            "code": "Patient",
-            "system": "fdpg.mii.cds",
-            "version": "1.0.0",
-            "display": "Patient"
-          },
-          "valueFilter": {
-            "type": "quantity-comparator",
-            "unit": {
-              "code": "a",
-              "display": "years"
-            },
-            "value": 18,
-            "comparator": "gt"
-          }
-        }
-      ],
-      [
-        {
-          "termCodes": [
-            {
-              "code": "53741008",
-              "system": "http://snomed.info/sct",
-              "display": "Coronary artery disease"
-            }
-          ],
-          "context": {
-            "code": "Diagnosis",
-            "system": "fdpg.mii.cds",
-            "version": "1.0.0",
-            "display": "Diagnosis"
-          }
-        }
-      ]
-    ],
-    "exclusionCriteria": [
-      [
-        {
-          "termCodes": [
-            {
-              "code": "38341003",
-              "system": "http://snomed.info/sct",
-              "display": "Hypertension"
-            }
-          ],
-          "context": {
-            "code": "Condition",
-            "system": "fdpg.mii.cds",
-            "version": "1.0.0",
-            "display": "Condition"
-          }
-        }
-      ]
-    ]
-  },
-  "dataExtraction": {
-    "attributeGroups": [
-      {
-        "groupReference": "MedicationDetails",
-        "attributes": [
-          {
-            "attributeRef": "medicationCode",
-            "mustHave": true
-          },
-          {
-            "attributeRef": "dosage",
-            "mustHave": true
-          }
-        ],
-        "filter": [
           [
             {
               "termCodes": [
                 {
-                  "code": "B01",
-                  "system": "http://fhir.de/CodeSystem/bfarm/atc",
-                  "version": "2022",
-                  "display": "Antithrombotic Agents"
+                  "code": "263495000",
+                  "system": "http://snomed.info/sct",
+                  "display": "Geschlecht"
                 }
               ],
               "context": {
-                "code": "Medication",
+                "code": "Patient",
                 "system": "fdpg.mii.cds",
                 "version": "1.0.0",
-                "display": "Medication administered"
+                "display": "Patient"
+              },
+              "valueFilter": {
+                "selectedConcepts": [
+                  {
+                    "code": "female",
+                    "display": "Female",
+                    "system": "http://hl7.org/fhir/administrative-gender"
+                  }
+                ],
+                "type": "concept"
+              }
+            }
+          ],
+          [
+            {
+              "termCodes": [
+                {
+                  "code": "8-918",
+                  "system": "http://fhir.de/CodeSystem/bfarm/ops",
+                  "version": "2023",
+                  "display": "Interdisziplinäre multimodale Schmerztherapie"
+                }
+              ],
+              "context": {
+                "code": "Procedure",
+                "system": "fdpg.mii.cds",
+                "version": "1.0.0",
+                "display": "Prozedur"
               }
             }
           ]
-        ]
-      }
-    ]
-  }
+
+      ],
+        "dataExtraction": {
+          "attributeGroups": [
+            {
+              "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
+              "attributes": [
+                {
+                  "attributeRef": "Observation.code",
+                  "mustHave": false
+                },
+                {
+                  "attributeRef": "Observation.value",
+                  "mustHave": true
+                }
+              ],
+              "filter": [
+                {
+                  "type": "token",
+                  "name": "code",
+                  "codes": [
+                    {
+                      "code": "718-7",
+                      "system": "http://loinc.org",
+                      "display": "Hemoglobin [Mass/volume] in Blood"
+                    },
+                    {
+                      "code": "33509-1",
+                      "system": "http://loinc.org",
+                      "display": "Hemoglobin [Mass/volume] in Body fluid"
+                    }
+                  ]
+                },
+                {
+                  "type": "date",
+                  "name": "date",
+                  "start": "2021-09-09",
+                  "end": "2021-10-09"
+                }
+              ]
+            }
+          ]
+        }
+    }
 }
 
 ```
