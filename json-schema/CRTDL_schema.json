@@ -68,9 +68,13 @@
                             },
                             "display": {
                               "type": "string"
+                            },
+                            "version": {
+                              "type": "string"
                             }
                           },
-                          "required": ["code", "system", "display"]
+                          "required": ["code", "system", "display"],
+                          "additionalProperties": false
                         }
                       },
                       "start": {
@@ -82,17 +86,21 @@
                         "format": "date"
                       }
                     },
-                    "required": ["type", "name"]
+                    "required": ["type", "name"],
+                    "additionalProperties": false
                   }
                 }
               },
-              "required": ["groupReference", "attributes", "filter"]
+              "required": ["groupReference", "attributes", "filter"],
+              "additionalProperties": false
             }
           }
         },
-        "required": ["attributeGroups"]
+        "required": ["attributeGroups"],
+        "additionalProperties": false
       }
     },
-    "required": ["version", "cohortDefinition", "dataExtraction"]
+    "required": ["version", "cohortDefinition", "dataExtraction"],
+  "additionalProperties": false
   }
   
