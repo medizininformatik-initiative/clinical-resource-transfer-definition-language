@@ -91,7 +91,7 @@
                   }
                 }
               },
-              "required": ["groupReference", "attributes", "filter"],
+              "required": ["groupReference", "attributes"],
               "additionalProperties": false
             }
           }
