@@ -1,109 +1,141 @@
 {
-    "$schema": "http://json-schema.org/to-be-done/schema#",
-    "$id": "http://example.com/schema/data-extraction-schema.json",
-    "type": "object",
-    "properties": {
-      "version": {
-        "type": "string",
-        "format": "uri",
-        "description": "Version identifier with a reference to a schema definition."
-      },
-      "display": {
-        "type": "string",
-        "description": "A display string."
-      },
-      "cohortDefinition": {
-        "$ref": "clinical-cohort-definition-language-schema.json#/definitions/cohortDefinition",
-        "description": "Reference to a cohort definition in CCDL schemas."
-      },
-      "dataExtraction": {
-        "type": "object",
-        "properties": {
-          "attributeGroups": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "groupReference": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "includeReferenceOnly": {
-                  "type": "boolean"
-                },
-                "attributes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "attributeRef": {
-                        "type": "string"
-                      },
-                      "mustHave": {
-                        "type": "boolean"
-                      }
+  "$schema": "http://json-schema.org/to-be-done/schema#",
+  "$id": "http://example.com/schema/data-extraction-schema.json",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "format": "uri",
+      "description": "Version identifier with a reference to a schema definition."
+    },
+    "display": {
+      "type": "string",
+      "description": "A display string."
+    },
+    "cohortDefinition": {
+      "$ref": "clinical-cohort-definition-language-schema.json#/definitions/cohortDefinition",
+      "description": "Reference to a cohort definition in CCDL schemas."
+    },
+    "dataExtraction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "attributeGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "groupReference": {
+                "type": "string",
+                "format": "uri"
+              },
+              "includeReferenceOnly": {
+                "type": "boolean"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "attributeRef": {
+                      "type": "string"
                     },
-                    "required": ["attributeRef", "mustHave"]
-                  }
-                },
-                "filter": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string"
-                      },
-                      "name": {
-                        "type": "string"
-                      },
-                      "codes": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "code": {
-                              "type": "string"
-                            },
-                            "system": {
-                              "type": "string",
-                              "format": "uri"
-                            },
-                            "display": {
-                              "type": "string"
-                            },
-                            "version": {
-                              "type": "string"
-                            }
-                          },
-                          "required": ["code", "system", "display"],
-                          "additionalProperties": false
-                        }
-                      },
-                      "start": {
-                        "type": "string",
-                        "format": "date"
-                      },
-                      "end": {
-                        "type": "string",
-                        "format": "date"
-                      }
+                    "mustHave": {
+                      "type": "boolean"
                     },
-                    "required": ["type", "name"],
-                    "additionalProperties": false
-                  }
+                    "linkedGroups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "attributeRef",
+                    "mustHave"
+                  ]
                 }
               },
-              "required": ["groupReference", "attributes"],
-              "additionalProperties": false
-            }
+              "filter": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "system": {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          "display": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "system",
+                          "display"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "start": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "end": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "name",
+                    "id"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "groupReference",
+              "attributes"
+            ],
+            "additionalProperties": false
           }
-        },
-        "required": ["attributeGroups"],
-        "additionalProperties": false
-      }
-    },
-    "required": ["version", "cohortDefinition", "dataExtraction"],
+        }
+      },
+      "required": [
+        "attributeGroups"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "cohortDefinition",
+    "dataExtraction"
+  ],
   "additionalProperties": false
-  }
+}
   
