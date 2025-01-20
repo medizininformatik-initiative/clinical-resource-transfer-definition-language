@@ -81,6 +81,7 @@
         "dataExtraction": {
           "attributeGroups": [
             {
+              "id": "TyphusDiagnosis",
               "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
               "attributes": [
                 {
