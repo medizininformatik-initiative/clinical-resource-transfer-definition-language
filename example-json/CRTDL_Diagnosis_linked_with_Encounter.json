@@ -80,8 +80,8 @@
       ],
         "dataExtraction": {
           "attributeGroups": [
-            {
-              "id": "TyphusDiagnosis",
+            { "id": "1234",
+              "name": "TyphusDiagnosis",
               "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
               "attributes": [
                 {
@@ -95,7 +95,7 @@
                 {
                   "attributeRef": "Observation.encounter",
                   "mustHave": true,
-                  "linkedGroups": ["TyphusEncounter"]
+                  "linkedGroups": ["985"]
                 }
               ],
               "filter": [
@@ -123,8 +123,8 @@
                 }
               ]
             },
-            {
-              "id": "TyphusEncounter",
+            { "id": "985",
+              "name": "TyphusEncounter",
               "includeReferenceOnly": true,
               "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
               "attributes": [
