@@ -1,8 +1,8 @@
 {
-    "version": "http://json-schema.org/to-be-done/schema#",
+    "version": "1.0.0",
     "display": "",
     "cohortDefinition": {
-      "version": "http://to_be_decided.com/draft-1/schema#",
+      "version": "1.1.0",
       "display": "",
       "inclusionCriteria": [
         [

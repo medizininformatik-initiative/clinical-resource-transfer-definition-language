@@ -1,11 +1,10 @@
 {
-  "$schema": "http://json-schema.org/to-be-done/schema#",
-  "$id": "http://example.com/schema/data-extraction-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalResourceTransferDefinitionLanguage/1.0.0/schema",
   "type": "object",
   "properties": {
     "version": {
-      "type": "string",
-      "format": "uri",
+      "const": "1.0.0",
       "description": "Version identifier with a reference to a schema definition."
     },
     "display": {
@@ -13,7 +12,7 @@
       "description": "A display string."
     },
     "cohortDefinition": {
-      "$ref": "clinical-cohort-definition-language-schema.json#/definitions/cohortDefinition",
+      "$ref": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/1.1.0/schema",
       "description": "Reference to a cohort definition in CCDL schemas."
     },
     "dataExtraction": {

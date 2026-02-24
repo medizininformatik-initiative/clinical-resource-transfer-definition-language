@@ -36,10 +36,10 @@ Here is a example of a CRTDL JSON:
 
 ```json
 {
-    "version": "http://json-schema.org/to-be-done/schema#",
+    "version": "1.0.0",
     "display": "",
     "cohortDefinition": {
-      "version": "http://to_be_decided.com/draft-1/schema#",
+      "version": "1.1.0",
       "display": "",
       "inclusionCriteria": [
         [
@@ -172,7 +172,7 @@ The Structure is equivalent to the **CRTDL** attributeGroups. Group references a
 
 ```
 {
-  "version": "whitelist1.0",
+  "version": "1.0.0",
   "dataExtraction": {
     "attributeGroups": [
       {
