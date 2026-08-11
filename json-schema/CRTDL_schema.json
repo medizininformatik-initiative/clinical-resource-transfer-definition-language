@@ -1,19 +1,19 @@
 {
-  "$schema": "http://json-schema.org/to-be-done/schema#",
-  "$id": "http://example.com/schema/data-extraction-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalResourceTransferDefinitionLanguage/v1/schema",
   "type": "object",
   "properties": {
     "version": {
       "type": "string",
-      "format": "uri",
-      "description": "Version identifier with a reference to a schema definition."
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the CRTDL format this document conforms to. Must be a 1.x.y release matching this schema's major version."
     },
     "display": {
       "type": "string",
       "description": "A display string."
     },
     "cohortDefinition": {
-      "$ref": "clinical-cohort-definition-language-schema.json#/definitions/cohortDefinition",
+      "$ref": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v1/schema",
       "description": "Reference to a cohort definition in CCDL schemas."
     },
     "dataExtraction": {
