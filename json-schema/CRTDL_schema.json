@@ -28,7 +28,14 @@
                 "type": "string"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^[a-z0-9]([a-z0-9_]*[a-z0-9])?$",
+                "maxLength": 100,
+                "description": "Machine-readable identifier for this attributeGroup, unique within the CRTDL. Used verbatim by consumers as the base name of the output file produced for this group when flattening. Not intended for display; see display."
+              },
+              "display": {
+                "type": "string",
+                "description": "Human-readable label for this attributeGroup, shown to the user. Free text, not constrained and not required to be unique."
               },
               "groupReference": {
                 "type": "string",
@@ -119,7 +126,8 @@
             "required": [
               "groupReference",
               "attributes",
-              "id"
+              "id",
+              "name"
             ],
             "additionalProperties": false
           }
