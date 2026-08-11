@@ -21,6 +21,8 @@ The data extraction object contains an array defining **attributeGroups**, which
 
 Each group has an identifier for the group called **groupReference**, a list of attributes to be extracted **attributes** and a filter object containing a time filter **** and a  list of code filters **filters**.
 
+Each group also has a machine-readable **name** (required, unique within the CRTDL, matching `^[a-z0-9]([a-z0-9_]*[a-z0-9])?$`, max 100 chars) that consumers use verbatim as the base file name when flattening extracted data, and an optional human-readable **display** label shown to users. **name** is not meant for display, and **display** is not constrained or required to be unique.
+
 An attributes to be extracted contains an attribute reference **attributeRef** and information if the attribute is required **must-have** e.g. ``` {
             "attributeRef": "medicationCode",
             "mustHave": true
@@ -40,7 +42,7 @@ Here is a example of a CRTDL JSON:
     "version": "1.0.0",
     "display": "",
     "cohortDefinition": {
-      "version": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v1/schema",
+      "version": "1.1.0",
       "display": "",
       "inclusionCriteria": [
         [
@@ -120,7 +122,9 @@ Here is a example of a CRTDL JSON:
     "dataExtraction": {
       "attributeGroups": [
         {
-          "id": "HemoglobinObservation",
+          "id": "be963395-3186-4ae6-8a23-18968bcb8857",
+          "name": "hemoglobin_observation",
+          "display": "Hemoglobin Observation",
           "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
           "attributes": [
             {
