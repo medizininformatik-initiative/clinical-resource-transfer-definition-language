@@ -13,7 +13,8 @@ The DEQ is utilized to describe data extraction inside the FDPG+ infrastructure.
 
 ## Structure
 
-A DEQ consists of 2 Parts:
+A CRTDL consists of 2 Parts:
+
 The cohort definition in **CCDL**, see [**CCDL specs**](https://github.com/medizininformatik-initiative/clinical-cohort-definition-language/tree/main) for further details and a data extraction object.
 
 The data extraction object contains an array defining **attributeGroups**, which bundle attributes together.
@@ -158,34 +159,6 @@ Here is a example of a CRTDL JSON:
         }
       ]
     }
-}
-
-```
-# Whitelisting
-
-Whitelisting happens at data integration center (DIC) level.  
-
-## Structure
-
-The Structure is equivalent to the **CRTDL** attributeGroups. Group references are FHIR compliant e.g. **profiles/ressources**. 
-
-## Example
-
-```
-{
-  "version": "1.0.0",
-  "dataExtraction": {
-    "attributeGroups": [
-      {
-        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung",
-        "attributes": [
-          {
-            "attributeRef": "Encounter.diagnosis"
-          }
-        ]
-      }
-    ]
-  }
 }
 
 ```
