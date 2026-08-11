@@ -1,11 +1,13 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/whiteList/1.0.0/schema",
+    "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/whiteList/v1/schema",
     "type": "object",
     "required": ["version", "dataExtraction"],
     "properties": {
       "version": {
-        "const": "1.0.0"
+        "type": "string",
+        "pattern": "^1\\.\\d+\\.\\d+$",
+        "description": "Semantic version of the whitelist format this document conforms to. Must be a 1.x.y release matching this schema's major version."
       },
       "dataExtraction": {
         "type": "object",

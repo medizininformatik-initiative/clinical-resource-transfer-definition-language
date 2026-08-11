@@ -39,7 +39,7 @@ Here is a example of a CRTDL JSON:
     "version": "1.0.0",
     "display": "",
     "cohortDefinition": {
-      "version": "1.1.0",
+      "version": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v1/schema",
       "display": "",
       "inclusionCriteria": [
         [
@@ -114,48 +114,49 @@ Here is a example of a CRTDL JSON:
             }
           ]
 
-      ],
-        "dataExtraction": {
-          "attributeGroups": [
+      ]
+    },
+    "dataExtraction": {
+      "attributeGroups": [
+        {
+          "id": "HemoglobinObservation",
+          "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
+          "attributes": [
             {
-              "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
-              "attributes": [
+              "attributeRef": "Observation.code",
+              "mustHave": false
+            },
+            {
+              "attributeRef": "Observation.value",
+              "mustHave": true
+            }
+          ],
+          "filter": [
+            {
+              "type": "token",
+              "name": "code",
+              "codes": [
                 {
-                  "attributeRef": "Observation.code",
-                  "mustHave": false
+                  "code": "718-7",
+                  "system": "http://loinc.org",
+                  "display": "Hemoglobin [Mass/volume] in Blood"
                 },
                 {
-                  "attributeRef": "Observation.value",
-                  "mustHave": true
-                }
-              ],
-              "filter": [
-                {
-                  "type": "token",
-                  "name": "code",
-                  "codes": [
-                    {
-                      "code": "718-7",
-                      "system": "http://loinc.org",
-                      "display": "Hemoglobin [Mass/volume] in Blood"
-                    },
-                    {
-                      "code": "33509-1",
-                      "system": "http://loinc.org",
-                      "display": "Hemoglobin [Mass/volume] in Body fluid"
-                    }
-                  ]
-                },
-                {
-                  "type": "date",
-                  "name": "date",
-                  "start": "2021-09-09",
-                  "end": "2021-10-09"
+                  "code": "33509-1",
+                  "system": "http://loinc.org",
+                  "display": "Hemoglobin [Mass/volume] in Body fluid"
                 }
               ]
+            },
+            {
+              "type": "date",
+              "name": "date",
+              "start": "2021-09-09",
+              "end": "2021-10-09"
             }
           ]
         }
+      ]
     }
 }
 
