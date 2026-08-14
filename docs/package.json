@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "dependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "mermaid": "^11.16.1",
+    "vite": "8.2.1",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev ",
+    "docs:build": "vitepress build ",
+    "docs:preview": "vitepress preview "
+  }
+}

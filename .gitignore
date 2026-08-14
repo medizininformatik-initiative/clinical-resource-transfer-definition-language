@@ -19,4 +19,10 @@ ontology
 dependencies
 package.json
 fhirpkg.lock.json
+!docs/package.json
+
+# docs (vitepress)
+docs/node_modules
+docs/.vitepress/dist
+docs/.vitepress/cache
 
