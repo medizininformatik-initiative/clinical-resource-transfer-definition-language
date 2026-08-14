@@ -9,7 +9,7 @@ This repo contains schema and example JSON files describing the Clinical Resourc
 
 ## Purpose
 
-The CRTDL is utilized to describe data extraction inside the FDPG+ infrastructure.
+The CRTDL is used to formally describe data extraction for clinical Data Use Project Data Extractions.
 
 ## Structure
 
