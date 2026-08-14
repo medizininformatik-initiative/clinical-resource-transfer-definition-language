@@ -1,0 +1,247 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to build docs from (e.g. v1.0.0)'
+        required: true
+        type: string
+      update_stable:
+        description: 'Also overwrite /clinical-resource-transfer-definition-language/stable/ with this build (use the latest release tag)'
+        required: false
+        type: boolean
+        default: false
+
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and Deploy Documentation
+    runs-on: ubuntu-24.04
+    permissions:
+      # Needed to push the built docs to the gh-pages branch.
+      contents: write
+    if: >-
+      ${{
+        !(github.event_name == 'release' && github.event.release.prerelease)
+        && !(github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+          && (contains(github.ref_name, '-alpha')
+            || contains(github.ref_name, '-beta')
+            || contains(github.ref_name, '-rc')))
+      }}
+
+    steps:
+      - name: Configure git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version and ref
+        id: vars
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          DISPATCH_TAG: ${{ github.event.inputs.tag }}
+          PUSH_REF: ${{ github.ref }}
+          PUSH_REF_NAME: ${{ github.ref_name }}
+          DISPATCH_UPDATE_STABLE: ${{ github.event.inputs.update_stable }}
+        run: |
+          # build_stable controls whether the version-independent /clinical-resource-transfer-definition-language/stable/
+          # copy is rebuilt. It tracks non-prerelease releases (job-level `if` already
+          # filters prereleases), plus an explicit workflow_dispatch opt-in for backfills.
+          if [[ "${EVENT_NAME}" == "push" ]]; then
+            if [[ "${PUSH_REF}" == refs/tags/* ]]; then
+              # Tag push: workflow triggered by release tag (release event is suppressed
+              # when the release is created with the default GITHUB_TOKEN).
+              echo "version=${PUSH_REF_NAME}" >> "$GITHUB_OUTPUT"
+              echo "ref=${PUSH_REF_NAME}" >> "$GITHUB_OUTPUT"
+              echo "is_release=true" >> "$GITHUB_OUTPUT"
+              echo "build_stable=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "version=dev" >> "$GITHUB_OUTPUT"
+              echo "ref=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
+              echo "is_release=false" >> "$GITHUB_OUTPUT"
+              echo "build_stable=false" >> "$GITHUB_OUTPUT"
+            fi
+          elif [[ "${EVENT_NAME}" == "release" ]]; then
+            echo "version=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+            echo "ref=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+            echo "build_stable=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "version=${DISPATCH_TAG}" >> "$GITHUB_OUTPUT"
+            echo "ref=${DISPATCH_TAG}" >> "$GITHUB_OUTPUT"
+            echo "is_release=false" >> "$GITHUB_OUTPUT"
+            if [[ "${DISPATCH_UPDATE_STABLE}" == "true" ]]; then
+              echo "build_stable=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "build_stable=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Checkout repository at target ref
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          ref: ${{ steps.vars.outputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: 'docs/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: docs
+
+      - name: Build documentation
+        run: npm run docs:build
+        working-directory: docs
+        env:
+          VITE_BASE_PATH: /clinical-resource-transfer-definition-language/${{ steps.vars.outputs.version }}/
+
+      - name: Save build output
+        run: cp -r docs/.vitepress/dist /tmp/docs-build
+
+      # Second build with the version-independent base so /clinical-resource-transfer-definition-language/stable/ has its
+      # own correctly-based asset and link URLs (a plain copy would keep /clinical-resource-transfer-definition-language/<version>/).
+      - name: Build stable documentation
+        if: steps.vars.outputs.build_stable == 'true'
+        run: npm run docs:build
+        working-directory: docs
+        env:
+          VITE_BASE_PATH: /clinical-resource-transfer-definition-language/stable/
+
+      - name: Save stable build output
+        if: steps.vars.outputs.build_stable == 'true'
+        run: cp -r docs/.vitepress/dist /tmp/docs-build-stable
+
+      - name: Checkout gh-pages branch
+        run: |
+          git fetch origin gh-pages:gh-pages 2>/dev/null || true
+          if git rev-parse --verify gh-pages >/dev/null 2>&1; then
+            git checkout gh-pages
+          else
+            # Create orphan branch with initial files
+            git checkout --orphan gh-pages
+            git rm -rf .
+            echo '[]' > versions.json
+            touch .nojekyll
+            cat > index.html << 'HEREDOC'
+          <!DOCTYPE html>
+          <html>
+          <head><meta http-equiv="refresh" content="0; url=/clinical-resource-transfer-definition-language/dev/"></head>
+          <body><a href="/clinical-resource-transfer-definition-language/dev/">Redirecting to latest docs...</a></body>
+          </html>
+          HEREDOC
+            git add versions.json .nojekyll index.html
+            git commit -m "Initialize gh-pages branch"
+          fi
+
+      - name: Deploy version directory
+        env:
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: |
+          rm -rf "${VERSION}"
+          cp -r /tmp/docs-build "${VERSION}"
+
+      - name: Deploy stable directory
+        if: steps.vars.outputs.build_stable == 'true'
+        run: |
+          rm -rf stable
+          cp -r /tmp/docs-build-stable stable
+
+      - name: Update versions.json
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          DOC_VERSION: ${{ steps.vars.outputs.version }}
+          IS_RELEASE: ${{ steps.vars.outputs.is_release }}
+        with:
+          script: |
+            const fs = require('fs');
+            const version = process.env.DOC_VERSION;
+            const isRelease = process.env.IS_RELEASE === 'true';
+
+            let versions = [];
+            try {
+              versions = JSON.parse(fs.readFileSync('versions.json', 'utf8'));
+            } catch {
+              versions = [];
+            }
+
+            // Remove existing entry for this version
+            versions = versions.filter(v => v.version !== version);
+
+            // If this is a release, unmark all others as latest
+            if (isRelease) {
+              versions.forEach(v => { v.latest = false; });
+            }
+
+            // Add new entry
+            versions.push({
+              version,
+              path: `/clinical-resource-transfer-definition-language/${version}/`,
+              latest: isRelease
+            });
+
+            // Sort: latest first, then semver descending, dev last
+            versions.sort((a, b) => {
+              if (a.version === 'dev') return 1;
+              if (b.version === 'dev') return -1;
+              if (a.latest && !b.latest) return -1;
+              if (!a.latest && b.latest) return 1;
+              const aParts = a.version.replace('v', '').split('.').map(Number);
+              const bParts = b.version.replace('v', '').split('.').map(Number);
+              for (let i = 0; i < 3; i++) {
+                if ((bParts[i] || 0) !== (aParts[i] || 0)) {
+                  return (bParts[i] || 0) - (aParts[i] || 0);
+                }
+              }
+              return 0;
+            });
+
+            fs.writeFileSync('versions.json', JSON.stringify(versions, null, 2) + '\n');
+            console.log('Updated versions.json:', JSON.stringify(versions, null, 2));
+
+      - name: Update root redirect
+        if: steps.vars.outputs.is_release == 'true'
+        env:
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: |
+          cat > index.html << HEREDOC
+          <!DOCTYPE html>
+          <html>
+          <head><meta http-equiv="refresh" content="0; url=/clinical-resource-transfer-definition-language/${VERSION}/"></head>
+          <body><a href="/clinical-resource-transfer-definition-language/${VERSION}/">Redirecting to latest docs...</a></body>
+          </html>
+          HEREDOC
+
+      - name: Commit and push
+        env:
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: |
+          git add "${VERSION}" versions.json index.html .nojekyll
+          if [ -d stable ]; then
+            git add stable
+          fi
+          git commit -m "Deploy docs: ${VERSION}" || echo "No changes to commit"
+          git push origin gh-pages
