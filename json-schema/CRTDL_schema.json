@@ -13,7 +13,7 @@
       "description": "A display string."
     },
     "cohortDefinition": {
-      "$ref": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v1/schema",
+      "$ref": "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v2/schema",
       "description": "Reference to a cohort definition in CCDL schemas."
     },
     "dataExtraction": {

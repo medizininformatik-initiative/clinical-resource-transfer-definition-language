@@ -42,7 +42,7 @@ Here is a example of a CRTDL JSON:
     "version": "1.0.0",
     "display": "",
     "cohortDefinition": {
-      "version": "1.1.0",
+      "version": "2.0.0",
       "display": "",
       "inclusionCriteria": [
         [
