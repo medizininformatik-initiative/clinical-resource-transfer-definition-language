@@ -1,5 +1,10 @@
 [
   {
+    "version": "v1.0.0",
+    "path": "/clinical-resource-transfer-definition-language/v1.0.0/",
+    "latest": true
+  },
+  {
     "version": "dev",
     "path": "/clinical-resource-transfer-definition-language/dev/",
     "latest": false
