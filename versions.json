@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "version": "dev",
+    "path": "/clinical-resource-transfer-definition-language/dev/",
+    "latest": false
+  }
+]
