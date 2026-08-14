@@ -44,7 +44,7 @@ export default withMermaid({
             },
             {
                 text: 'Changelog',
-                link: 'https://github.com/medizininformatik-initiative/clinical-resource-transfer-definition-language/releases'
+                link: '/changelog.md'
             }
         ]
     }
