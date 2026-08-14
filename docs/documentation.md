@@ -183,13 +183,45 @@ Date filters restrict resources to a date range via **start** and **end** (day-w
 }
 ```
 
+## Validation
+
+The JSON Schema alone cannot express every constraint a valid CRTDL must satisfy. Validators (and any tooling that consumes a CRTDL directly) must additionally check:
+
+- **Attribute group `id`s are unique** within a CRTDL document. A duplicate `id` makes every `linkedGroups` reference to that `id` ambiguous.
+- **Attribute group `name`s are unique** within a CRTDL document. Tooling that derives one output artifact per group from its `name` (for example, one CSV file per group when flattening) silently loses data if two groups share a `name`.
+- **Every `linkedGroups` entry resolves.** Each value in `attributes[].linkedGroups` must equal the `id` of an attribute group present in the same document.
+- **In a `date` filter, `end` must not be before `start`.** A reversed range selects nothing and is usually an authoring error.
+- **`name` is not a Windows reserved device name.** Case-insensitively, `con`, `prn`, `aux`, `nul`, `com1`–`com9`, and `lpt1`–`lpt9` are rejected, since `name` becomes the base name of an output file when flattening extracted data.
+
+### Format assertion
+
+JSON Schema draft 2020-12 treats `format` (e.g. `uri`, `date`) as an annotation by default — a validator only rejects malformed values if format assertion is explicitly enabled. Validators for CRTDL documents must enable format assertion rather than relying on `format` as an annotation only, otherwise fields like `groupReference` or a filter's `start`/`end` accept syntactically invalid values.
+
+### Reference validator
+
+[`scripts/validate_crtdl.py`](https://github.com/medizininformatik-initiative/clinical-resource-transfer-definition-language/blob/main/scripts/validate_crtdl.py) implements this section: it validates a CRTDL document against the JSON Schema with format assertion enabled, then applies the rules above. Install dependencies with `pip install -r requirements.txt` and run:
+
+```sh
+python scripts/validate_crtdl.py example-json/*.json
+```
+
+By default it resolves the `cohortDefinition` schema from the published CCDL repository; pass `--ccdl-schema <path>` to validate against a local checkout instead.
+
+[`example-json/invalid/`](https://github.com/medizininformatik-initiative/clinical-resource-transfer-definition-language/tree/main/example-json/invalid) holds documents that deliberately violate these rules, one violation per attribute group (labeled in each group's `display`), so running the validator against them demonstrates every check above:
+
+```sh
+python scripts/validate_crtdl.py example-json/invalid/*.json
+```
+
+These are intentionally excluded from `example-json/*.json` so they aren't mistaken for valid examples.
+
 ## Example
 
 Here is an example of a CRTDL JSON:
 
 ```json
 {
-    "version": "1.0.0",
+    "version": "2.0.0",
     "display": "",
     "cohortDefinition": {
       "version": "2.0.0",
