@@ -83,8 +83,7 @@
       "attributeGroups": [
         {
           "id": "145f0931-1013-4d4c-befb-35d5630cac27",
-          "name": "hemoglobin_observation",
-          "display": "Hemoglobin Observation",
+          "name": "Hemoglobin Observation",
           "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
           "attributes": [
             {

@@ -82,8 +82,7 @@
     "attributeGroups": [
       {
         "id": "0cb4bbf1-3c2c-4549-b738-d005130257fb",
-        "name": "typhus_diagnosis",
-        "display": "Typhus Diagnosis",
+        "name": "Typhus Diagnosis",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
         "attributes": [
           {
@@ -125,8 +124,7 @@
       },
       {
         "id": "f15dc0a3-9076-4fb6-8703-7c74bb6efea0",
-        "name": "typhus_encounter",
-        "display": "Typhus Encounter",
+        "name": "Typhus Encounter",
         "includeReferenceOnly": true,
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung",
         "attributes": [
