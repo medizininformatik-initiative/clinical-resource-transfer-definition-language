@@ -29,7 +29,30 @@ It holds an array defining **attributeGroups**, which bundle attributes together
 
 Each group has a unique **id**, a **groupReference** pointing at the FHIR StructureDefinition the group targets, a list of attributes to be extracted **attributes**, and an optional filter object containing a time filter and a list of code filters, see [Filters](#filters).
 
-Each group also has a machine-readable **name** (required, unique within the CRTDL, matching `^[a-z0-9]([a-z0-9_]*[a-z0-9])?$`, max 100 chars) that consumers use verbatim as the base file name when flattening extracted data, and an optional human-readable **display** label shown to users. **name** is not meant for display, and **display** is not constrained or required to be unique.
+Each group also has a human-readable **name** (required, 1-64 characters, no leading/trailing whitespace) that is shown to users and, via [slugification](#slugification), determines the [output file name](#output-file-names) used when flattening extracted data. **name** must be [unique](#uniqueness-comparison) across all `attributeGroups` in the CRTDL after slugification.
+
+### Slugification of attributeGroup names
+
+Slugification turns a free-text **name** of an `attributeGroup` into a normalized, file-system- and URL-safe token by applying the following steps, in order:
+
+1. Trim leading and trailing whitespace.
+2. Convert to lowercase.
+3. Transliterate German-specific characters to their conventional ASCII spelling: `ä` → `ae`, `ö` → `oe`, `ü` → `ue`, `ß` → `ss`.
+4. Normalize to Unicode NFKD form and drop combining diacritical marks (Unicode category Mn), folding any other accented Latin letter to its base letter (e.g. `é` → `e`, `ñ` → `n`, `ç` → `c`).
+5. Replace every run of one or more characters outside `a-z` and `0-9` with a single `_` (underscore).
+6. Strip any leading or trailing `_`.
+
+For example, `"Hemoglobin Observation"` slugifies to `hemoglobin_observation`, and `"Typhus Diagnosis"` slugifies to `typhus_diagnosis`. [Output file names](#output-file-names) and the [uniqueness comparison](#uniqueness-comparison) both build on this algorithm.
+
+Step 3 exists because German names are common in this format: folding `ä`/`ö`/`ü`/`ß` to `ae`/`oe`/`ue`/`ss` keeps the slug readable and matches everyday German transliteration, instead of letting them fall through to step 5 and collapse into a bare separator. Step 4 is a general fallback for other Latin-script accents that step 3 doesn't cover. For example, `"Meine Hämoglobin Werte von 2020!"` slugifies to `meine_haemoglobin_werte_von_2020`: `ä` becomes `ae` in step 3 before the separator-collapsing step ever sees it, each space becomes a `_`, and the trailing `!` is dropped as a trailing separator.
+
+### Output file names
+
+The base file name used for an attribute group's flattened output is the [slugified](#slugification) form of its **name**.
+
+### Uniqueness comparison
+
+**name** of `attributeGroups` must be unique within a CRTDL's `attributeGroups`, but uniqueness is evaluated on the [slugified](#slugification) form, not the raw string. Two names that differ only in case, whitespace, or punctuation collapse to the same slug and therefore count as a duplicate — for example, `"Hemoglobin Observation"` and `"hemoglobin  observation!"` both slugify to `hemoglobin_observation` and must not appear together in the same CRTDL. Consuming tooling must slugify every attribute group's **name** and reject the CRTDL if any two slugs are equal.
 
 ### Consent Handling
 
@@ -104,7 +127,7 @@ A group can be marked **includeReferenceOnly**, meaning it is only extracted whe
 ```json
 {
   "id": "0cb4bbf1-3c2c-4549-b738-d005130257fb",
-  "name": "typhus_diagnosis",
+  "name": "Typhus Diagnosis",
   "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
   "attributes": [
     {
@@ -116,7 +139,7 @@ A group can be marked **includeReferenceOnly**, meaning it is only extracted whe
 },
 {
   "id": "f15dc0a3-9076-4fb6-8703-7c74bb6efea0",
-  "name": "typhus_encounter",
+  "name": "Typhus Encounter",
   "includeReferenceOnly": true,
   "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-fall/StructureDefinition/KontaktGesundheitseinrichtung",
   "attributes": [
@@ -250,8 +273,7 @@ Here is an example of a CRTDL JSON:
       "attributeGroups": [
         {
           "id": "be963395-3186-4ae6-8a23-18968bcb8857",
-          "name": "hemoglobin_observation",
-          "display": "Hemoglobin Observation",
+          "name": "Hemoglobin Observation",
           "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
           "attributes": [
             {

@@ -83,8 +83,7 @@
       "attributeGroups": [
         {
           "id": "ea232747-6fb5-4325-9bb1-9aa6d5308e39",
-          "name": "typhus_diagnosis",
-          "display": "Typhus Diagnosis",
+          "name": "Typhus Diagnosis",
           "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
           "attributes": [
             {
