@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
-  "display": "INVALID EXAMPLE - demonstrates every rule scripts/validate_crtdl.py checks. See docs/documentation.md#validation. version above uses the old major (1.x.y) instead of 2.x.y.",
+  "version": "1",
+  "display": "INVALID EXAMPLE - demonstrates every rule scripts/validate_crtdl.py checks. See docs/documentation.md#validation. version above is '1' instead of the required const '2'.",
   "cohortDefinition": {
-    "version": "2.0.0",
+    "version": "2",
     "display": "",
     "inclusionCriteria": [
       [

@@ -4,9 +4,8 @@
   "type": "object",
   "properties": {
     "version": {
-      "type": "string",
-      "pattern": "^2\\.\\d+\\.\\d+$",
-      "description": "Semantic version of the CRTDL format this document conforms to. Must be a 2.x.y release matching this schema's major version."
+      "const": "2",
+      "description": "Schema version of the CRTDL format this document conforms to. Fixed per schema major version and will change as the schema evolves."
     },
     "display": {
       "type": "string",

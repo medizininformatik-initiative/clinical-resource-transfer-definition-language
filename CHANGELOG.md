@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add CI workflow running `scripts/validate_crtdl.py` against `example-json/*.json` (must pass) and `example-json/invalid/*.json` (each must fail)
 ### Changed
 - **Breaking:** `$id` changed from `.../ClinicalResourceTransferDefinitionLanguage/v1/schema` to `.../v2/schema`
-- **Breaking:** `version` now requires a `2.x.y` release (`^2\.\d+\.\d+$`) instead of `1.x.y`
+- **Breaking:** `version` is now a fixed const `"2"`, matching CCDL's own versioning, instead of requiring a semver `2.x.y` release
 - **Breaking:** `dataExtraction.attributeGroups` now requires at least one entry (`minItems: 1`)
 - **Breaking:** each attribute group's `attributes` now requires at least one entry (`minItems: 1`)
 - **Breaking:** `id`, `groupReference`, and `attributeRef` now reject empty strings (`minLength: 1`)

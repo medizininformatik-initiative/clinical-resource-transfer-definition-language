@@ -1,8 +1,8 @@
 {
-  "version": "2.0.0",
+  "version": "2",
   "display": "INVALID EXAMPLE - dataExtraction.attributeGroups is empty (minItems: 1 violation). Kept separate from CRTDL_invalid_example.json because this violation rules out having any groups to demonstrate the other rules.",
   "cohortDefinition": {
-    "version": "2.0.0",
+    "version": "2",
     "display": "",
     "inclusionCriteria": [
       [

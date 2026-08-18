@@ -221,7 +221,7 @@ Here is an example of a CRTDL JSON:
 
 ```json
 {
-    "version": "2.0.0",
+    "version": "2",
     "display": "",
     "cohortDefinition": {
       "version": "2",
