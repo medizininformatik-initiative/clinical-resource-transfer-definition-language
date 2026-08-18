@@ -38,3 +38,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add `token` and `date` filter types
 - Add example CRTDL JSON files (`example-json/`)
 - Add GitHub Pages documentation site built with VitePress (`docs/`), with per-version documentation and a version switcher
+
+## [0.1.0] - 2025-07-17
+
+Tagged retroactively to give the schema shape already distributed to production before formal versioning existed a citable anchor. `$id` was a placeholder (`http://example.com/schema/data-extraction-schema.json`) and `version` was typed as a bare URI-format string rather than a real version identifier; both were formalized in `v1.0.0`.
+
+### Added
+- Add CRTDL JSON schema (`json-schema/CRTDL_schema.json`) and example CRTDL JSON files (`example-json/`)
