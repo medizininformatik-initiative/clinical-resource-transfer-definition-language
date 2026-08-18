@@ -22,16 +22,23 @@ from typing import Any, Iterable, Optional
 
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
+from referencing.exceptions import Unretrievable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SCHEMA = REPO_ROOT / "json-schema" / "CRTDL_schema.json"
 
-# The $ref target isn't a fetchable URL (it's a plain JSON Schema $id), so we
-# resolve it against the published source instead. Override with
-# --ccdl-schema to validate against a local checkout.
+# The $id the CRTDL schema's $ref points to (see CRTDL_schema.json).
+CCDL_SCHEMA_ID = "https://medizininformatik-initiative.de/fdpg/ClinicalCohortDefinitionLanguage/v2/schema"
+
+# That $id isn't a fetchable URL, so we resolve it against the published
+# source instead. Pinned to a commit rather than main so results don't
+# change just because CCDL's main branch moves; bump it deliberately when
+# CCDL v2 is tagged/released. Override with --ccdl-schema to validate
+# against a local checkout instead.
 CCDL_SCHEMA_FALLBACK_URL = (
     "https://raw.githubusercontent.com/medizininformatik-initiative/"
-    "clinical-cohort-definition-language/main/json-schema/"
+    "clinical-cohort-definition-language/"
+    "5933fc8ce849f72e9e6bfa5dedafc686d392f2ca/json-schema/"
     "clinical-cohort-definition-language-schema.json"
 )
 
@@ -55,6 +62,8 @@ def build_validator(
     schema = load_json(crtdl_schema_path)
 
     def retrieve(uri: str) -> Resource:
+        if uri != CCDL_SCHEMA_ID:
+            raise Unretrievable(uri)
         if ccdl_schema_path is not None:
             return Resource.from_contents(load_json(ccdl_schema_path))
         with urllib.request.urlopen(CCDL_SCHEMA_FALLBACK_URL) as response:

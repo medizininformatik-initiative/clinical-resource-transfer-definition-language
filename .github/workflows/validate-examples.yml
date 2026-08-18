@@ -1,0 +1,53 @@
+name: Validate CRTDL Examples
+
+on:
+  push:
+    paths:
+      - 'example-json/**'
+      - 'json-schema/**'
+      - 'scripts/validate_crtdl.py'
+      - 'requirements.txt'
+      - '.github/workflows/validate-examples.yml'
+  pull_request:
+    paths:
+      - 'example-json/**'
+      - 'json-schema/**'
+      - 'scripts/validate_crtdl.py'
+      - 'requirements.txt'
+      - '.github/workflows/validate-examples.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate example CRTDL documents
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Valid examples must pass validation
+        run: python3 scripts/validate_crtdl.py example-json/*.json
+
+      - name: Invalid examples must each fail validation
+        run: |
+          set -e
+          failed=0
+          for f in example-json/invalid/*.json; do
+            if python3 scripts/validate_crtdl.py "$f" > /dev/null; then
+              echo "::error file=$f::expected validation to fail, but it passed"
+              failed=1
+            else
+              echo "OK (expected failure): $f"
+            fi
+          done
+          exit $failed

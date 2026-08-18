@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add note requiring validators to enable JSON Schema format assertion, since draft 2020-12 treats `format` as annotation-only by default
 - Add `scripts/validate_crtdl.py`, a reference validator implementing the schema plus the above rules, with `requirements.txt` for its dependencies
 - Add `example-json/invalid/`, documents that each deliberately violate one validation rule, to demonstrate and exercise `scripts/validate_crtdl.py`
+- Add CI workflow running `scripts/validate_crtdl.py` against `example-json/*.json` (must pass) and `example-json/invalid/*.json` (each must fail)
 ### Changed
 - **Breaking:** `$id` changed from `.../ClinicalResourceTransferDefinitionLanguage/v1/schema` to `.../v2/schema`
 - **Breaking:** `version` now requires a `2.x.y` release (`^2\.\d+\.\d+$`) instead of `1.x.y`
@@ -20,6 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Deprecated
 ### Removed
 ### Fixed
+- Fix `example-json/*.json` setting `cohortDefinition.version` to `2.0.0` instead of the CCDL-required const `2`, which made the examples fail schema validation
+- Fix `scripts/validate_crtdl.py` fetching the CCDL schema from the `main` branch (an unpinned, moving target); pin to a commit instead
+- Fix `scripts/validate_crtdl.py`'s `retrieve()` ignoring the requested `$ref` URI and always returning the CCDL schema, which would silently resolve any future unrelated `$ref` to the wrong schema instead of failing
 ### Security
 
 ## [1.0.0] - 2026-08-14
