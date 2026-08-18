@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [UNRELEASED] - yyyy-mm-dd
+## [1.0.0] - 2026-08-18
 
 ### Added
 - Add CRTDL JSON schema (`json-schema/CRTDL_schema.json`), composing a CCDL `cohortDefinition` with a `dataExtraction` object
