@@ -24,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fix `example-json/*.json` setting `cohortDefinition.version` to `2.0.0` instead of the CCDL-required const `2`, which made the examples fail schema validation
 - Fix `scripts/validate_crtdl.py` fetching the CCDL schema from the `main` branch (an unpinned, moving target); pin to a commit instead
 - Fix `scripts/validate_crtdl.py`'s `retrieve()` ignoring the requested `$ref` URI and always returning the CCDL schema, which would silently resolve any future unrelated `$ref` to the wrong schema instead of failing
+- Fix `scripts/validate_crtdl.py` comparing attribute group `name`s and checking for Windows-reserved names on the raw string instead of the [slugified](docs/documentation.md#slugification) form, as `docs/documentation.md` documents; two names that only differ after slugification (e.g. `"Con!"` vs. `"con"`) previously went undetected
+- Fix `example-json/invalid/CRTDL_invalid_example.json` carrying a stray `display` field per attribute group (removed from the schema earlier), which made every group in that fixture additionally fail on `additionalProperties` and obscured the one intentional violation per group; labeling now uses each group's `id` instead, matching the docs
+- Fix `docs/documentation.md`'s Validation section describing attribute group `name` uniqueness and the reserved-device-name check without mentioning slugification, contradicting the more precise "Uniqueness comparison" and "Slugification" sections
+- Fix `docs/documentation.md`'s embedded full example setting `cohortDefinition.version` to `2.0.0` instead of `2`
 ### Security
 
 ## [1.0.0] - 2026-08-14

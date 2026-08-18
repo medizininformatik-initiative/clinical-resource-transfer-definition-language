@@ -6,15 +6,19 @@ Runs two passes:
    referenced CCDL schema resolved, and format assertion enabled).
 2. The cross-reference rules the schema cannot express (see the
    "Validation" section in docs/documentation.md): unique attribute group
-   ids, unique attribute group names, resolvable linkedGroups references,
-   non-reversed date filter ranges, and non-reserved attribute group names.
+   ids, attribute group names unique after slugification, resolvable
+   linkedGroups references, non-reversed date filter ranges, and
+   attribute group names that don't slugify to a reserved Windows device
+   name.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
+import unicodedata
 import urllib.request
 from datetime import date
 from pathlib import Path
@@ -50,6 +54,19 @@ WINDOWS_RESERVED_NAMES = {
     *(f"com{i}" for i in range(1, 10)),
     *(f"lpt{i}" for i in range(1, 10)),
 }
+
+# Matches docs/documentation.md's "Slugification of attributeGroup names".
+GERMAN_TRANSLITERATIONS = {"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"}
+
+
+def slugify(name: str) -> str:
+    value = name.strip().lower()
+    for src, dst in GERMAN_TRANSLITERATIONS.items():
+        value = value.replace(src, dst)
+    value = unicodedata.normalize("NFKD", value)
+    value = "".join(ch for ch in value if not unicodedata.combining(ch))
+    value = re.sub(r"[^a-z0-9]+", "_", value)
+    return value.strip("_")
 
 
 def load_json(path: Path) -> dict:
@@ -96,14 +113,21 @@ def check_semantics(instance: dict) -> list[str]:
 
     ids = [g["id"] for g in groups if isinstance(g, dict) and isinstance(g.get("id"), str)]
     names = [g["name"] for g in groups if isinstance(g, dict) and isinstance(g.get("name"), str)]
+    slugs = [slugify(name) for name in names]
 
     for dup in _duplicates(ids):
         problems.append(f"duplicate attributeGroup id: {dup!r}")
-    for dup in _duplicates(names):
-        problems.append(f"duplicate attributeGroup name: {dup!r}")
-    for name in names:
-        if name.lower() in WINDOWS_RESERVED_NAMES:
-            problems.append(f"attributeGroup name is a Windows reserved name: {name!r}")
+    for dup_slug in _duplicates(slugs):
+        conflicting = [name for name, slug in zip(names, slugs) if slug == dup_slug]
+        problems.append(
+            f"duplicate attributeGroup name after slugification: {dup_slug!r} "
+            f"(from {', '.join(map(repr, conflicting))})"
+        )
+    for name, slug in zip(names, slugs):
+        if slug in WINDOWS_RESERVED_NAMES:
+            problems.append(
+                f"attributeGroup name slugifies to a Windows reserved name: {name!r} -> {slug!r}"
+            )
 
     known_ids = set(ids)
     for group in groups:

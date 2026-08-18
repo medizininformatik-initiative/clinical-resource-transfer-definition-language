@@ -38,7 +38,6 @@
       {
         "id": "",
         "name": "empty_id_and_reference",
-        "display": "BROKEN: id and groupReference are empty strings, and the one attribute has an empty attributeRef (minLength: 1 violations)",
         "groupReference": "",
         "attributes": [
           {
@@ -50,7 +49,6 @@
       {
         "id": "duplicate-group-id",
         "name": "duplicate_group_name",
-        "display": "BROKEN: shares its id and name with the next group",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
         "attributes": [
           {
@@ -61,8 +59,7 @@
       },
       {
         "id": "duplicate-group-id",
-        "name": "duplicate_group_name",
-        "display": "BROKEN: shares its id and name with the previous group",
+        "name": "Duplicate Group Name!",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
         "attributes": [
           {
@@ -73,8 +70,7 @@
       },
       {
         "id": "reserved-name-group",
-        "name": "con",
-        "display": "BROKEN: name is a Windows reserved device name",
+        "name": "Con!",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
         "attributes": [
           {
@@ -86,7 +82,6 @@
       {
         "id": "dangling-link-source",
         "name": "dangling_link_source",
-        "display": "BROKEN: linkedGroups references an id that does not exist in this document",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
         "attributes": [
           {
@@ -99,7 +94,6 @@
       {
         "id": "reversed-date-range",
         "name": "reversed_date_range",
-        "display": "BROKEN: filter end is before start",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
         "attributes": [
           {
@@ -119,7 +113,6 @@
       {
         "id": "malformed-uri-group",
         "name": "malformed_uri_group",
-        "display": "BROKEN: groupReference is not a valid URI (only caught if the validator asserts format)",
         "groupReference": "not a valid uri",
         "attributes": [
           {
@@ -131,7 +124,6 @@
       {
         "id": "empty-attributes-group",
         "name": "empty_attributes_group",
-        "display": "BROKEN: attributes array is empty (minItems: 1 violation)",
         "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
         "attributes": []
       }
