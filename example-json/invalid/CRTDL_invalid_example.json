@@ -1,6 +1,6 @@
 {
-  "version": "1",
-  "display": "INVALID EXAMPLE - demonstrates every rule scripts/validate_crtdl.py checks. See docs/documentation.md#validation. version above is '1' instead of the required const '2'.",
+  "version": "2",
+  "display": "INVALID EXAMPLE - demonstrates every rule scripts/validate_crtdl.py checks. See docs/documentation.md#validation. version above is '2' instead of the required const '1'.",
   "cohortDefinition": {
     "version": "2",
     "display": "",
