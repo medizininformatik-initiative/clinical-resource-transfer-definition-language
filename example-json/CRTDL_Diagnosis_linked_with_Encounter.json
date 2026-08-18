@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0",
+  "version": "2",
   "display": "",
   "cohortDefinition": {
-    "version": "2.0.0",
+    "version": "2",
     "display": "",
     "inclusionCriteria": [
       [
@@ -117,7 +117,7 @@
           {
             "type": "date",
             "name": "date",
-            "start": "2021-5",
+            "start": "2021-05-01",
             "end": "2021-10-09"
           }
         ]

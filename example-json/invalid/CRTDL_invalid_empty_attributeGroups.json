@@ -1,0 +1,39 @@
+{
+  "version": "2",
+  "display": "INVALID EXAMPLE - dataExtraction.attributeGroups is empty (minItems: 1 violation). Kept separate from CRTDL_invalid_example.json because this violation rules out having any groups to demonstrate the other rules.",
+  "cohortDefinition": {
+    "version": "2",
+    "display": "",
+    "inclusionCriteria": [
+      [
+        {
+          "termCodes": [
+            {
+              "code": "424144002",
+              "system": "http://snomed.info/sct",
+              "display": "Gegenwärtiges chronologisches Alter"
+            }
+          ],
+          "context": {
+            "code": "Patient",
+            "system": "fdpg.mii.cds",
+            "version": "1.0.0",
+            "display": "Patient"
+          },
+          "valueFilter": {
+            "type": "quantity-comparator",
+            "unit": {
+              "code": "a",
+              "display": "a"
+            },
+            "value": 18,
+            "comparator": "gt"
+          }
+        }
+      ]
+    ]
+  },
+  "dataExtraction": {
+    "attributeGroups": []
+  }
+}

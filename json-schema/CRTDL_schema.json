@@ -1,12 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalResourceTransferDefinitionLanguage/v1/schema",
+  "$id": "https://medizininformatik-initiative.de/fdpg/ClinicalResourceTransferDefinitionLanguage/v2/schema",
   "type": "object",
   "properties": {
     "version": {
-      "type": "string",
-      "pattern": "^1\\.\\d+\\.\\d+$",
-      "description": "Semantic version of the CRTDL format this document conforms to. Must be a 1.x.y release matching this schema's major version."
+      "const": "2",
+      "description": "Schema version of the CRTDL format this document conforms to. Fixed per schema major version and will change as the schema evolves."
     },
     "display": {
       "type": "string",
@@ -21,11 +20,13 @@
       "properties": {
         "attributeGroups": {
           "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "properties": {
               "id": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "name": {
                 "type": "string",
@@ -36,18 +37,21 @@
               },
               "groupReference": {
                 "type": "string",
-                "format": "uri"
+                "format": "uri",
+                "minLength": 1
               },
               "includeReferenceOnly": {
                 "type": "boolean"
               },
               "attributes": {
                 "type": "array",
+                "minItems": 1,
                 "items": {
                   "type": "object",
                   "properties": {
                     "attributeRef": {
-                      "type": "string"
+                      "type": "string",
+                      "minLength": 1
                     },
                     "mustHave": {
                       "type": "boolean"

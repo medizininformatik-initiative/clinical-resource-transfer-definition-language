@@ -1,0 +1,132 @@
+{
+  "version": "1",
+  "display": "INVALID EXAMPLE - demonstrates every rule scripts/validate_crtdl.py checks. See docs/documentation.md#validation. version above is '1' instead of the required const '2'.",
+  "cohortDefinition": {
+    "version": "2",
+    "display": "",
+    "inclusionCriteria": [
+      [
+        {
+          "termCodes": [
+            {
+              "code": "424144002",
+              "system": "http://snomed.info/sct",
+              "display": "Gegenwärtiges chronologisches Alter"
+            }
+          ],
+          "context": {
+            "code": "Patient",
+            "system": "fdpg.mii.cds",
+            "version": "1.0.0",
+            "display": "Patient"
+          },
+          "valueFilter": {
+            "type": "quantity-comparator",
+            "unit": {
+              "code": "a",
+              "display": "a"
+            },
+            "value": 18,
+            "comparator": "gt"
+          }
+        }
+      ]
+    ]
+  },
+  "dataExtraction": {
+    "attributeGroups": [
+      {
+        "id": "",
+        "name": "empty_id_and_reference",
+        "groupReference": "",
+        "attributes": [
+          {
+            "attributeRef": "",
+            "mustHave": true
+          }
+        ]
+      },
+      {
+        "id": "duplicate-group-id",
+        "name": "duplicate_group_name",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
+        "attributes": [
+          {
+            "attributeRef": "Condition.code",
+            "mustHave": true
+          }
+        ]
+      },
+      {
+        "id": "duplicate-group-id",
+        "name": "Duplicate Group Name!",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
+        "attributes": [
+          {
+            "attributeRef": "Condition.value",
+            "mustHave": false
+          }
+        ]
+      },
+      {
+        "id": "reserved-name-group",
+        "name": "Con!",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
+        "attributes": [
+          {
+            "attributeRef": "Observation.value",
+            "mustHave": true
+          }
+        ]
+      },
+      {
+        "id": "dangling-link-source",
+        "name": "dangling_link_source",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-diagnose/StructureDefinition/Diagnose",
+        "attributes": [
+          {
+            "attributeRef": "Condition.encounter",
+            "mustHave": true,
+            "linkedGroups": ["this-id-does-not-exist"]
+          }
+        ]
+      },
+      {
+        "id": "reversed-date-range",
+        "name": "reversed_date_range",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
+        "attributes": [
+          {
+            "attributeRef": "Observation.value",
+            "mustHave": true
+          }
+        ],
+        "filter": [
+          {
+            "type": "date",
+            "name": "date",
+            "start": "2021-10-09",
+            "end": "2021-05-01"
+          }
+        ]
+      },
+      {
+        "id": "malformed-uri-group",
+        "name": "malformed_uri_group",
+        "groupReference": "not a valid uri",
+        "attributes": [
+          {
+            "attributeRef": "Observation.value",
+            "mustHave": true
+          }
+        ]
+      },
+      {
+        "id": "empty-attributes-group",
+        "name": "empty_attributes_group",
+        "groupReference": "https://www.medizininformatik-initiative.de/fhir/core/modul-labor/StructureDefinition/ObservationLab",
+        "attributes": []
+      }
+    ]
+  }
+}
